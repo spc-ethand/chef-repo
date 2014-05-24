@@ -7,7 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
-new_cluster = node['fdb']['server'][0]['coordinator'] && !::File.exists?('/etc/foundationdb/fdb.cluster')
+#new_cluster = node['fdb']['hatch003'][0]['coordinator'] && !::File.exists?('/etc/foundationdb/fdb.cluster')
+new_cluster = true
 
 include_recipe 'spc_FoundationDB::user'
 include_recipe 'spc_FoundationDB::client'
@@ -18,7 +19,7 @@ file "fdb.cluster owner" do
   group 'foundationdb'
 end
 
-pkg_version = "2.0.0"
+pkg_version = "2.0.5" # could this be stored as a data bag attr allowing us to increment versions w/o touching recipes?
 pkg_file = case node['platform_family']
            when 'debian' then "foundationdb-server_#{pkg_version}-1_amd64.deb"
            when 'rhel', 'fedora' then "foundationdb-server-#{pkg_version}-1.x86_64.rpm"
@@ -42,21 +43,21 @@ service "foundationdb" do
 #  subscribes :restart, 'file[/etc/foundationdb/fdb.cluster]'
 end
 
-template "/etc/foundationdb/foundationdb.conf" do
-  source "conf.erb"
-  group "foundationdb"
-  owner "foundationdb"
-  mode "0644"
-  variables({
-    :servers => node['fdb']['server']
-  })
-  notifies :restart, 'service[foundationdb]', new_cluster ? :immediately : :delayed
-end
+#template "/etc/foundationdb/foundationdb.conf" do
+#  source "conf.erb"
+#  group "foundationdb"
+#  owner "foundationdb"
+#  mode "0644"
+#  variables({
+#    :servers => node['fdb']['hatch003']
+#  })
+#  notifies :restart, 'service[foundationdb]', new_cluster ? :immediately : :delayed
+#end
 
-if new_cluster
-  cluster_item = data_bag_item('fdb_cluster', node['fdb']['cluster'])
-  command = "configure new #{cluster_item['redundancy']} #{cluster_item['storage']}"
-  fdb command do
-    timeout 60
-  end
-end
+#if new_cluster
+#  cluster_item = data_bag_item('fdb_cluster', node['fdb']['cluster'])
+#  command = "configure new #{cluster_item['redundancy']} #{cluster_item['storage']}"
+#  fdb command do
+#    timeout 60
+#  end
+#end
