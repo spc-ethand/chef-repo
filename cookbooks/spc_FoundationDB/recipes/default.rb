@@ -2,12 +2,12 @@
 # Cookbook Name:: spc_FoundationDB
 # Recipe:: default
 #
-# Copyright 2014, YOUR_COMPANY_NAME
+# Copyright 2014, StackPointCloud, Inc. 
 #
 # All rights reserved - Do Not Redistribute
 #
 
-log "Hello World! Boom!"
+log "Installing HTTPd"
 
 package 'httpd' do
 	action :install
