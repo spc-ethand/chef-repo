@@ -91,3 +91,5 @@ end
 # 	- 4GB memory required per process, so we need to ensure that for every core we assign 4GB of memory
 #   - all FDB machines should be identical
 # 	- configuration file should be changed on the master then pushed to the other nodes, so we do the config once. 
+# - make FDB externally accessible. This will be done on the private interface, making the solution accessible to internal applications
+
